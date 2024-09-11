@@ -1,0 +1,54 @@
+// Jigisha Kshirsagar 
+// CSC 210 - Adriana Picoral
+// Project 1 - Calculate current CSC 210 grade
+package com.gradescope.gradenator;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+public class Gradenator {
+    public static void main(String[] args) {
+        System.out.print("File name? "); // This line should be okay
+        String fileName = System.console().readLine(); // Try using System.console().readLine() instead
+
+        try {
+            File file = new File(fileName);
+            Scanner fileScanner = new Scanner(file);
+
+            double totalGrade = 0.0;
+            double totalPercentage = 0.0;
+
+            while (fileScanner.hasNextLine()) {
+                String line = fileScanner.nextLine();
+                String[] parts = line.split(";");
+
+                // Parse numbers
+                String[] numbers = parts[0].trim().split("\\s+");
+                double sum = 0.0;
+                for (String number : numbers) {
+                    sum += Integer.parseInt(number);
+                }
+                double avg = sum / numbers.length;
+
+                // Parse string
+                String description = parts[1].trim();
+
+                // Parse percentage
+                double percentage = Double.parseDouble(parts[2].trim().replace("%", ""));
+
+                // Calculate weighted sum
+                totalGrade += avg * percentage / 100.0;
+                totalPercentage += percentage;
+
+                // Print output
+                System.out.format("%.1f; %.1f%%; avg=%.1f%n", avg, percentage, avg);
+            }
+
+            // Print total grade
+            System.out.format("TOTAL = %.1f%% out of %.1f%%%n", totalGrade, totalPercentage);
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found!");
+        }
+    }
+}
